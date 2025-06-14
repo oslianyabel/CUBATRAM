@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content" style="
+        background: linear-gradient(182.52deg, rgba(255, 255, 255, 0) 37.74%, rgba(255, 255, 255, 0.5) 97.89%), url('{% if hero_section.background_image %}{{ hero_section.background_image.url }}{% else %}{% static 'img/banner.jpg' %}{% endif %}');
+        background-repeat: no-repeat;
+        background-size: cover;
+        ">  
+            <div class="hero-buttons">
+                <!-- Destinations -->
+                {% if destinations %}
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ destinations.first.name }}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        {% for destination in destinations %}
+                            <a class="dropdown-item" href="#">{{ destination.name }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Categories -->
+                {% if categories %}
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ categories.first }}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                        {% for category in categories %}
+                            <a class="dropdown-item" href="#">{{ category.title }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <a href="#" class="btn btn-primary">Find Tour</a>
+            </div>
+        </div>
+        
+        <!-- Featured Categories Section -->
+        <div class="cards-container" style="margin-top: 60px;">
+            {% for category in featured_categories|slice:":3" %}
+            <div class="card" style="
+            background: linear-gradient(180deg, rgba(239, 141, 101, 0) 42.31%, #EF8D65 84.62%), url('{% if category.image %}{{ category.image.url }}{% else %}{% static 'img/card.png' %}{% endif %}'); 
+            background-repeat: no-repeat;
+            background-size: cover;
+            ">
+                <div class="card-text">
+                    <a href="{% url 'tour_list' %}?category={{ category.slug }}">{{ category.title }}</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Popular Destinations -->
+    <section class="cards-section">
+        <h2 class="section-title">{{hero_section.title1}}</h2>
+        <div class="cards-container">
+            {% for destination in popular_destinations|slice:":3" %}
+            <div class="card" style="
+            background: linear-gradient(180deg, rgba(239, 141, 101, 0) 42.31%, #EF8D65 84.62%), url('{% if destination.image %}{{ destination.image.url }}{% else %}{% static 'img/card.png' %}{% endif %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+            ">
+                <div class="card-text">
+                    <a href="{% url 'tour_list' %}?destination={{ destination.slug }}">{{ destination.name }}</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Adventure Tours -->
+    <section class="cards-section">
+        <h2 class="section-title">{{hero_section.title2}}</h2>
+        <div class="cards-container">
+            {% for tour in adventure_tours|slice:":3" %}
+            <div class="card" style="
+            background: linear-gradient(180deg, rgba(239, 141, 101, 0) 42.31%, #EF8D65 84.62%), url('{% if tour.main_image %}{{ tour.main_image.url }}{% else %}{% static 'img/card.png' %}{% endif %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+            ">
+                <div class="card-text">
+                    <a href="#">{{ tour.title }}</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="info-section">
+        <div class="info-header">
+            <h2 class="info-title">{{ info_section.title }}</h2>
+            <p class="info-subtitle">{{ info_section.subtitle }}</p>
+        </div>
+        
+        <p class="info-content">
+            {{ info_section.content }}
+        </p>
+        
+        <div class="info-points">
+            {% for point in info_section.points.all %}
+            <div class="info-point">
+                <div class="point-marker">
+                    <img src="{% static 'svg/'|add:point.icon %}" alt="">
+                </div>
+                <p class="info-content">
+                    {{ point.content }}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Featured Tours Section -->
+    <section class="products-section">
+        <div class="container">
+            <div class="product-list">
+                {% for tour in featured_tours %}
+                <!-- Product Item -->
+                <div class="product-item">
+                    <div class="product-image" style="
+                    background: linear-gradient(180deg, rgba(239, 141, 101, 0) 42.31%, #EF8D65 84.62%), url('{% if tour.main_image %}{{ tour.main_image.url }}{% else %}{% static 'img/card.png' %}{% endif %}');
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                    "></div>
+                    <div class="product-info">
+                        <h2 class="product-title">{{ tour.title }}</h2>
+                        <p class="product-description">
+                            {{ tour.short_description }}
+                        </p>
+                        <p class="product-price">Adult Price: ${{ tour.adult_price }} USD</p>
+                        <a href="#" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Special Offers -->
+    <section class="footer-cards">
+        <h2 class="section-title">{{hero_section.title3}}</h2>
+        <div class="cards-container">
+            {% for offer in special_offers %}
+            <div class="card" style="
+            background: linear-gradient(180deg, rgba(239, 141, 101, 0) 42.31%, #EF8D65 84.62%), url('{% if offer.image %}{{ offer.image.url }}{% else %}{% static 'img/card.png' %}{% endif %}');
+            background-repeat: no-repeat;
+            background-size: cover;
+            ">
+                <div class="card-text">
+                    {{ offer.title }}
+                    {% if offer.discount_percentage %}
+                    <span class="discount-badge">{{ offer.discount_percentage }}% OFF</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

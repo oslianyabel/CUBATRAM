@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tour Operador Caribeño{% endblock %}</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <link rel="stylesheet" href="{% static 'css/style5.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <a href="{% url 'home' %}">
+                <img src="{% static 'svg/logo.svg' %}" alt="CUBATRAM">
+            </a>
+        </div>
+        <nav>
+            <div class="menu-toggle">☰</div>
+            <div class="nav-links">
+                <a href="#">Destinations</a>
+                <a href="#">Tours</a>
+                <a href="#">Blog</a>
+                <a href="#">About Us</a>
+                <a href="#">FAQs</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Contenido principal -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="contact-info">
+                    <div class="footer-logo">
+                        <img src="{% static 'svg/logo_footer.svg' %}" alt="">
+                    </div>
+                    <div class="contact-item">{{ contact_info.phone }}</div>
+                    <div class="contact-item">{{ contact_info.email }}</div>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="link-column">
+                        <h3>Menu</h3>
+                        <a href="{% url 'tour_list' %}?category=popular-destinations">Destinations</a>
+                        <a href="{% url 'tour_list' %}">Tours</a>
+                        <a href="#">Blogs</a>
+                        <a href="#">About Us</a>
+                        <a href="#">FAQs</a>
+                    </div>
+                </div>
+                
+                <div class="social-links">
+                    <h3>Connect</h3>
+                    <div class="social-icons">
+                        {% for social in social_media %}
+                        <a href="{{ social.url }}" class="icon">{{ social.name }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="back-to-top">
+                    <i class="fas fa-arrow-up"></i>
+                </div>
+            </div>
+            
+            <div class="copyright">© {% now "Y" %} cubatram.com All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <script>
+        // Back to top functionality
+        document.querySelector('.back-to-top').addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Toggle mobile menu
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+
+    <script src="{% static 'js/hero.js' %}"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
