@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils import timezone
@@ -11,9 +10,7 @@ class Category(models.Model):
     title = models.CharField(max_length=100, blank=True)
     slug = models.SlugField(max_length=100, unique=True)
     subtitle = models.CharField(max_length=200, blank=True)
-    image = models.ImageField(
-        upload_to="categories/", blank=True, null=True
-    )
+    image = models.ImageField(upload_to="categories/", blank=True, null=True)
     is_featured = models.BooleanField(default=False)
     display_order = models.PositiveIntegerField(default=0)
 
