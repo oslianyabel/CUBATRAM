@@ -14,7 +14,7 @@
                 {% if destinations %}
                 <div class="dropdown">
                     <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenu1">
-                        Select Destination
+                        Select Destination <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
                         {% for destination in destinations %}
@@ -32,7 +32,7 @@
                 {% if categories %}
                 <div class="dropdown">
                     <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenu2">
-                        Select Category
+                        Select Category <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         {% for category in categories %}
@@ -179,51 +179,64 @@
 
 {% block extra_js %}
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Manejar el formulario de búsqueda
-        const tourSearchForm = document.getElementById('tourSearchForm');
-        
-        if (tourSearchForm) {
-            tourSearchForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Obtener destinos seleccionados
-                const destinationCheckboxes = tourSearchForm.querySelectorAll('input[name="destination"]:checked');
-                const destinations = Array.from(destinationCheckboxes).map(cb => cb.value).join(',');
-                
-                // Obtener categorías seleccionadas
-                const categoryCheckboxes = tourSearchForm.querySelectorAll('input[name="category"]:checked');
-                const categories = Array.from(categoryCheckboxes).map(cb => cb.value).join(',');
-                
-                // Construir URL
-                let url = "{% url 'tour_list' %}?";
-                if (destinations) url += `destinations=${destinations}&`;
-                if (categories) url += `categories=${categories}`;
-                
-                // Redirigir
-                window.location.href = url;
-            });
+        document.addEventListener('DOMContentLoaded', function() {
+            // Manejar el formulario de búsqueda
+            const tourSearchForm = document.getElementById('tourSearchForm');
             
-            // Actualizar el texto del botón dropdown cuando se selecciona un item
-            tourSearchForm.querySelectorAll('.dropdown').forEach(dropdown => {
-                const toggle = dropdown.querySelector('.dropdown-toggle');
-                const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]');
+            if (tourSearchForm) {
+                tourSearchForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Obtener destinos seleccionados
+                    const destinationCheckboxes = tourSearchForm.querySelectorAll('input[name="destination"]:checked');
+                    const destinations = Array.from(destinationCheckboxes).map(cb => cb.value).join(',');
+                    
+                    // Obtener categorías seleccionadas
+                    const categoryCheckboxes = tourSearchForm.querySelectorAll('input[name="category"]:checked');
+                    const categories = Array.from(categoryCheckboxes).map(cb => cb.value).join(',');
+                    
+                    // Construir URL
+                    let url = "{% url 'tour_list' %}?";
+                    if (destinations) url += `destinations=${destinations}&`;
+                    if (categories) url += `categories=${categories}`;
+                    
+                    // Redirigir
+                    window.location.href = url;
+                });
                 
-                checkboxes.forEach(checkbox => {
-                    checkbox.addEventListener('change', function() {
-                        const checkedItems = dropdown.querySelectorAll('input[type="checkbox"]:checked');
-                        if (checkedItems.length === 0) {
-                            toggle.textContent = toggle.id === 'dropdownMenu1' ? 'Select Destination' : 'Select Category';
-                        } else if (checkedItems.length === 1) {
-                            toggle.textContent = checkedItems[0].parentElement.textContent.trim();
-                        } else {
-                            toggle.textContent = `${checkedItems.length} selected`;
-                        }
+                // Actualizar el texto del botón dropdown cuando se selecciona un item
+                tourSearchForm.querySelectorAll('.dropdown').forEach(dropdown => {
+                    const toggle = dropdown.querySelector('.dropdown-toggle');
+                    const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]');
+                    const icon = toggle.querySelector('.fa-chevron-down') || document.createElement('i');
+                    
+                    // Si el ícono no existe, lo creamos y lo añadimos
+                    if (!icon.classList.contains('fa-chevron-down')) {
+                        icon.className = 'fas fa-chevron-down';
+                        icon.style.marginLeft = '10px';
+                        toggle.appendChild(icon);
+                    }
+                    
+                    checkboxes.forEach(checkbox => {
+                        checkbox.addEventListener('change', function() {
+                            const checkedItems = dropdown.querySelectorAll('input[type="checkbox"]:checked');
+                            const icon = toggle.querySelector('.fa-chevron-down');
+                            
+                            if (checkedItems.length === 0) {
+                                toggle.innerHTML = (toggle.id === 'dropdownMenu1' ? 'Select Destination' : 'Select Category');
+                                toggle.appendChild(icon);
+                            } else if (checkedItems.length === 1) {
+                                toggle.innerHTML = checkedItems[0].parentElement.textContent.trim();
+                                toggle.appendChild(icon);
+                            } else {
+                                toggle.innerHTML = `${checkedItems.length} selected`;
+                                toggle.appendChild(icon);
+                            }
+                        });
                     });
                 });
-            });
-        }
-    });
+            }
+        });
     </script>
     
     <script type="text/javascript" src="https://therahmatygroup.rezdy.com/pluginJs?script=modal"></script>

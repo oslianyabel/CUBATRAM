@@ -42,6 +42,10 @@ a {
     text-decoration: none;
 }
 
+.fa-chevron-down {
+    margin-left: 10px;
+}
+
 .logo {
     display: flex;
     align-items: center;
