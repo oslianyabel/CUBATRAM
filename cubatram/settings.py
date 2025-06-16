@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-patf*r7(amx9h*w+(nx^pe!eog&57a6j(g_%c40wv=2(y)4df8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['osliani.pythonanywhere.com', '127.0.0.1']
 
 
 # Application definition
@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # apps
+    'import_export',
+    # my apps
     'home',
 ]
 
@@ -121,6 +122,12 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

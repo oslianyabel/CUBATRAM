@@ -12,7 +12,7 @@ class Category(models.Model):
     slug = models.SlugField(max_length=100, unique=True)
     subtitle = models.CharField(max_length=200, blank=True)
     image = models.ImageField(
-        upload_to="static/media/categories/", blank=True, null=True
+        upload_to="categories/", blank=True, null=True
     )
     is_featured = models.BooleanField(default=False)
     display_order = models.PositiveIntegerField(default=0)
@@ -37,7 +37,7 @@ class Destination(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to="static/media/destinations/")
+    image = models.ImageField(upload_to="destinations/")
     is_active = models.BooleanField(default=True)
     is_popular = models.BooleanField(default=False)
     display_order = models.PositiveIntegerField(default=0)
@@ -57,7 +57,7 @@ class Destination(models.Model):
 class TourImage(models.Model):
     """Imágenes adicionales para los tours"""
 
-    image = models.ImageField(upload_to="static/media/tour_images/")
+    image = models.ImageField(upload_to="tour_images/")
     caption = models.CharField(max_length=200, blank=True)
     display_order = models.PositiveIntegerField(default=0)
 
@@ -91,7 +91,7 @@ class Tour(models.Model):
     duration = models.CharField(
         max_length=50, help_text="Duración del tour (ej: 4 horas, 1 día)"
     )
-    main_image = models.ImageField(upload_to="static/media/tours/")
+    main_image = models.ImageField(upload_to="tours/")
     is_featured = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -113,7 +113,7 @@ class HeroSection(models.Model):
     """Modelo para la sección hero de la página principal"""
 
     name = models.CharField(max_length=50)
-    background_image = models.ImageField(upload_to="static/media/hero/")
+    background_image = models.ImageField(upload_to="hero/")
     title1 = models.CharField(max_length=200)
     title2 = models.CharField(max_length=200)
     title3 = models.CharField(max_length=200)
@@ -168,7 +168,7 @@ class SpecialOffer(models.Model):
     """Modelo para ofertas especiales que aparecen en el footer"""
 
     title = models.CharField(max_length=100)
-    image = models.ImageField(upload_to="static/media/special_offers/")
+    image = models.ImageField(upload_to="special_offers/")
     description = models.TextField(blank=True)
     discount_percentage = models.PositiveIntegerField(blank=True, null=True)
     valid_from = models.DateField()
@@ -190,9 +190,7 @@ class Booking(models.Model):
     """Modelo para las reservas de tours"""
 
     tour = models.ForeignKey(Tour, on_delete=models.PROTECT, related_name="bookings")
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="bookings"
-    )
+    email = models.EmailField()
     date = models.DateField()
     time = models.TimeField()
     adults = models.PositiveIntegerField(default=1)

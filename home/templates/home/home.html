@@ -9,16 +9,20 @@
         background-repeat: no-repeat;
         background-size: cover;
         ">  
-            <div class="hero-buttons">
+            <form id="tourSearchForm" class="hero-buttons">
                 <!-- Destinations -->
                 {% if destinations %}
                 <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ destinations.first.name }}
+                    <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenu1">
+                        Select Destination
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
                         {% for destination in destinations %}
-                            <a class="dropdown-item" href="#">{{ destination.name }}</a>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="destination" value="{{ destination.slug|default:destination.id }}" 
+                                       {% if forloop.first %}checked{% endif %}>
+                                {{ destination.name }}
+                            </label>
                         {% endfor %}
                     </div>
                 </div>
@@ -27,19 +31,23 @@
                 <!-- Categories -->
                 {% if categories %}
                 <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ categories.first }}
+                    <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenu2">
+                        Select Category
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
                         {% for category in categories %}
-                            <a class="dropdown-item" href="#">{{ category.title }}</a>
+                            <label class="dropdown-item">
+                                <input type="checkbox" name="category" value="{{ category.slug|default:category.id }}"
+                                       {% if forloop.first %}checked{% endif %}>
+                                {{ category.title }}
+                            </label>
                         {% endfor %}
                     </div>
                 </div>
                 {% endif %}
                 
-                <a href="#" class="btn btn-primary">Find Tour</a>
-            </div>
+                <button type="submit" class="btn btn-primary">Find Tour</button>
+            </form>
         </div>
         
         <!-- Featured Categories Section -->
@@ -69,7 +77,7 @@
             background-size: cover;
             ">
                 <div class="card-text">
-                    <a href="{% url 'tour_list' %}?destination={{ destination.slug }}">{{ destination.name }}</a>
+                    <a href="">{{ destination.name }}</a>
                 </div>
             </div>
             {% endfor %}
@@ -117,6 +125,8 @@
             </div>
             {% endfor %}
         </div>
+
+        <a id="button-booking" class="button-booking rezdy rezdy-modal" href="https://therahmatygroup.rezdy.com" style="background: rgb(0, 82, 241); border: 1px solid rgb(0, 82, 241); color: rgb(255, 255, 255); font: bold 14px / 1 &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; padding: 12px 15px; text-align: center; width: 160px; display: block; text-decoration: none; cursor: pointer;">Book Now</a>
     </section>
 
     <!-- Featured Tours Section -->
@@ -165,4 +175,56 @@
             {% endfor %}
         </div>
     </section>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Manejar el formulario de búsqueda
+        const tourSearchForm = document.getElementById('tourSearchForm');
+        
+        if (tourSearchForm) {
+            tourSearchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Obtener destinos seleccionados
+                const destinationCheckboxes = tourSearchForm.querySelectorAll('input[name="destination"]:checked');
+                const destinations = Array.from(destinationCheckboxes).map(cb => cb.value).join(',');
+                
+                // Obtener categorías seleccionadas
+                const categoryCheckboxes = tourSearchForm.querySelectorAll('input[name="category"]:checked');
+                const categories = Array.from(categoryCheckboxes).map(cb => cb.value).join(',');
+                
+                // Construir URL
+                let url = "{% url 'tour_list' %}?";
+                if (destinations) url += `destinations=${destinations}&`;
+                if (categories) url += `categories=${categories}`;
+                
+                // Redirigir
+                window.location.href = url;
+            });
+            
+            // Actualizar el texto del botón dropdown cuando se selecciona un item
+            tourSearchForm.querySelectorAll('.dropdown').forEach(dropdown => {
+                const toggle = dropdown.querySelector('.dropdown-toggle');
+                const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]');
+                
+                checkboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        const checkedItems = dropdown.querySelectorAll('input[type="checkbox"]:checked');
+                        if (checkedItems.length === 0) {
+                            toggle.textContent = toggle.id === 'dropdownMenu1' ? 'Select Destination' : 'Select Category';
+                        } else if (checkedItems.length === 1) {
+                            toggle.textContent = checkedItems[0].parentElement.textContent.trim();
+                        } else {
+                            toggle.textContent = `${checkedItems.length} selected`;
+                        }
+                    });
+                });
+            });
+        }
+    });
+    </script>
+    
+    <script type="text/javascript" src="https://therahmatygroup.rezdy.com/pluginJs?script=modal"></script>
 {% endblock %}

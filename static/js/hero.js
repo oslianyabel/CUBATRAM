@@ -1,8 +1,7 @@
-// static/js/hero.js
 document.addEventListener('DOMContentLoaded', function() {
     // Cierra los menús al hacer click fuera
     document.addEventListener('click', function(event) {
-        if (!event.target.matches('.dropdown-toggle')) {
+        if (!event.target.closest('.dropdown')) {
             var dropdowns = document.getElementsByClassName("dropdown-menu");
             for (var i = 0; i < dropdowns.length; i++) {
                 var openDropdown = dropdowns[i];
@@ -16,8 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Alternar menús al hacer click
     var dropdownToggles = document.getElementsByClassName("dropdown-toggle");
     for (var i = 0; i < dropdownToggles.length; i++) {
-        dropdownToggles[i].addEventListener('click', function() {
-            var menu = this.nextElementSibling;
+        dropdownToggles[i].addEventListener('click', function(e) {
+            e.stopPropagation();
+            var menu = this.closest('.dropdown').querySelector(".dropdown-menu");
             if (menu.style.display === 'block') {
                 menu.style.display = 'none';
             } else {
@@ -25,4 +25,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    // Evitar que el menú se cierre al hacer click en los checkboxes
+    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        menu.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    });
 });
